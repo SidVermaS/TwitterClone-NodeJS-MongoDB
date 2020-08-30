@@ -13,12 +13,12 @@ router.post('/', async (req, res)=> {
         let tweet
         const hashtags=findHashtags(reqBody.text)
         if(hashtags.length) {
-            if(reqBody.photos)  {
+            if(reqBody.photo)  {
                 tweet=Tweet({
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,                    
                     hashtags: hashtags,
-                    photos: reqBody.photos,
+                    photo: reqBody.photo,
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -36,11 +36,11 @@ router.post('/', async (req, res)=> {
                 })
             }
         }   else    {
-            if(reqBody.photos)  {
+            if(reqBody.photo)  {
                 tweet=Tweet({
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,
-                    photos: reqBody.photos,
+                    photo: reqBody.photo,
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -78,12 +78,12 @@ router.post('/retweet', async (req, res)=> {
         const hashtags=findHashtags(reqBody.text)
         if(reqBody.with_comment)    {
             if(hashtags.length) {
-                if(reqBody.photos)  {
+                if(reqBody.photo)  {
                     tweet=Tweet({
                         _id: new mongoose.Types.ObjectId,
                         text: reqBody.text,                    
                         hashtags: hashtags,
-                        photos: reqBody.photos,
+                        photo: reqBody.photo,
                         likes: 0,
                         retweets: 0,
                         created: Date.now(),
@@ -103,11 +103,11 @@ router.post('/retweet', async (req, res)=> {
                     })
                 }
             }   else    {
-                if(reqBody.photos)  {
+                if(reqBody.photo)  {
                     tweet=Tweet({
                         _id: new mongoose.Types.ObjectId,
                         text: reqBody.text,
-                        photos: reqBody.photos,
+                        photo: reqBody.photo,
                         likes: 0,
                         retweets: 0,
                         created: Date.now(),
@@ -165,7 +165,7 @@ router.get('/', async (req, res)=>  {
             {
                 $project:   {
                     text: 1,
-                    photos: 1,
+                    photo: 1,
                     likes: 1,
                     retweets: 1,
                     created: 1,

@@ -9,8 +9,8 @@ const TweetSchema=mongoose.Schema({
         type: String,
         required: false
     }, 
-    photos: {
-        type: Array,
+    photo: {
+        type: String,
         required: false
     },
     hashtags:   {
