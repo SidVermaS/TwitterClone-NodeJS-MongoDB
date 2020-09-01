@@ -18,7 +18,7 @@ router.post('/', async (req, res)=>    {
 	
         if(await Profile.findOne({ username: profile.username }).select('_id'))    {
 			
-            let foundProfile=await Profile.findOne({ username: profile.username, password: profile.password }).select('_id username name')
+            let foundProfile=await Profile.findOne({ username: profile.username, password: profile.password }).select('_id username name photo_url_profile')
            
 			if(foundProfile)  {
                 if(reqProfile.token)    {

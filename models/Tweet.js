@@ -17,6 +17,11 @@ const TweetSchema=mongoose.Schema({
         type: Array,
         required: false,
     },
+	liked_users:	{
+		type: Array,
+		required: true,
+		ref: 'profiles'
+	},	
     likes:   {
         type: Number,
         required: true,      
@@ -31,11 +36,12 @@ const TweetSchema=mongoose.Schema({
     },
     retweet_id:    {
         type: mongoose.Schema.Types.ObjectId,
-        required: false
+        required: false,
     },
     profile_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+		ref: 'profiles'
     }
 })
 

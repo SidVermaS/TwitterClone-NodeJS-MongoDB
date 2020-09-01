@@ -19,7 +19,8 @@ router.post('/', async (req, res)=> {
                     text: reqBody.text,                    
                     hashtags: hashtags,
                     photo_url_tweet: reqBody.photo_url_tweet,
-                    likes: 0,
+					liked_users: [],
+                    likes: 0,					
                     retweets: 0,
                     created: Date.now(),
                     profile_id: reqBody.profile_id
@@ -28,7 +29,8 @@ router.post('/', async (req, res)=> {
                 tweet=Tweet({
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,
-                    hashtags: hashtags,
+                    hashtags: hashtags,					
+					liked_users: [new mongoose.Types.ObjectId('5f4e8199fbaec92ff448aef1')],
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -41,6 +43,7 @@ router.post('/', async (req, res)=> {
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,
                     photo_url_tweet: reqBody.photo_url_tweet,
+					liked_users: [],
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -50,6 +53,7 @@ router.post('/', async (req, res)=> {
                 tweet=Tweet({
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,
+					liked_users: [],
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -153,6 +157,7 @@ router.get('/', async (req, res)=>  {
         reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)
         reqQuery.index=parseInt(reqQuery.index)
 
+		console.log('~~ _id',reqQuery._id)
         const foundTweets=await Tweet.aggregate([
             {
                 $lookup:    {
@@ -160,7 +165,7 @@ router.get('/', async (req, res)=>  {
                     localField: 'profile_id',
                     foreignField: '_id',
                     as: 'profile'
-                }
+                },	
             },
             {
                 $project:   {
@@ -169,7 +174,11 @@ router.get('/', async (req, res)=>  {
                     likes: 1,
                     retweets: 1,
                     created: 1,
-                    retweet_id: 1,                    
+                    retweet_id: 1,   
+					profile: 1,
+					is_liked: {
+						$in: [reqQuery._id, "$liked_users"]
+					}	
                 }
             }
         ]).sort({ created: -1 }).skip(reqQuery.index).limit(15)

@@ -23,9 +23,9 @@ app.use('/register', registerRouter)
 
 // app.use(verifyToken)
 app.use('/tweet',tweetRouter)
-app.use('/upload/tweet', express.static(__dirname+'/upload/tweet'))
-app.use('/upload/profile', express.static(__dirname+'/upload/profile'))
-app.use('/upload/list', express.static(__dirname+'/upload/list'))
+app.use('/uploads/tweets', express.static(__dirname+'/uploads/tweets'))
+app.use('/uploads/profiles', express.static(__dirname+'/uploads/profiles'))
+app.use('/uploads/lists', express.static(__dirname+'/uploads/lists'))
 app.use('/profile',profileRouter)
 app.use('/list',listRouter)
 
