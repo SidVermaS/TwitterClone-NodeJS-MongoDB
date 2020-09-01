@@ -13,12 +13,12 @@ router.post('/', async (req, res)=> {
         let tweet
         const hashtags=findHashtags(reqBody.text)
         if(hashtags.length) {
-            if(reqBody.photo)  {
+            if(reqBody.photo_url_tweet)  {
                 tweet=Tweet({
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,                    
                     hashtags: hashtags,
-                    photo: reqBody.photo,
+                    photo_url_tweet: reqBody.photo_url_tweet,
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -36,11 +36,11 @@ router.post('/', async (req, res)=> {
                 })
             }
         }   else    {
-            if(reqBody.photo)  {
+            if(reqBody.photo_url_tweet)  {
                 tweet=Tweet({
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,
-                    photo: reqBody.photo,
+                    photo_url_tweet: reqBody.photo_url_tweet,
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),
@@ -60,7 +60,7 @@ router.post('/', async (req, res)=> {
         const savedTweet=await tweet.save()
        
         if(savedTweet)  {
-            return res.status(200).json({ message: 'Successfully tweeted', tweet: savedTweet })
+            return res.status(201).json({ message: 'Successfully tweeted', tweet: savedTweet })
         }   else    {
             return res.status(400).json({ message: 'Failed to tweet' })
         }
@@ -78,12 +78,12 @@ router.post('/retweet', async (req, res)=> {
         const hashtags=findHashtags(reqBody.text)
         if(reqBody.with_comment)    {
             if(hashtags.length) {
-                if(reqBody.photo)  {
+                if(reqBody.photo_url_tweet)  {
                     tweet=Tweet({
                         _id: new mongoose.Types.ObjectId,
                         text: reqBody.text,                    
                         hashtags: hashtags,
-                        photo: reqBody.photo,
+                        photo_url_tweet: reqBody.photo_url_tweet,
                         likes: 0,
                         retweets: 0,
                         created: Date.now(),
@@ -103,11 +103,11 @@ router.post('/retweet', async (req, res)=> {
                     })
                 }
             }   else    {
-                if(reqBody.photo)  {
+                if(reqBody.photo_url_tweet)  {
                     tweet=Tweet({
                         _id: new mongoose.Types.ObjectId,
                         text: reqBody.text,
-                        photo: reqBody.photo,
+                        photo_url_tweet: reqBody.photo_url_tweet,
                         likes: 0,
                         retweets: 0,
                         created: Date.now(),
@@ -165,7 +165,7 @@ router.get('/', async (req, res)=>  {
             {
                 $project:   {
                     text: 1,
-                    photo: 1,
+                    photo_url_tweet: 1,
                     likes: 1,
                     retweets: 1,
                     created: 1,

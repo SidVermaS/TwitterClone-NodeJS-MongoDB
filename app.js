@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
+import fileupload from 'express-fileupload'
 import registerRouter from './routes/register'
 import loginRouter from './routes/login'
 
@@ -27,6 +28,8 @@ app.use('/upload/profile', express.static(__dirname+'/upload/profile'))
 app.use('/upload/list', express.static(__dirname+'/upload/list'))
 app.use('/profile',profileRouter)
 app.use('/list',listRouter)
+
+app.use(fileupload())
 app.use('/upload', uploadRouter)
 
 function verifyToken(req, res, next)  {

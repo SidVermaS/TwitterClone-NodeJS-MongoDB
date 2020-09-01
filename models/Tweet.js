@@ -9,7 +9,7 @@ const TweetSchema=mongoose.Schema({
         type: String,
         required: false
     }, 
-    photo: {
+    photo_url_tweet: {
         type: String,
         required: false
     },
