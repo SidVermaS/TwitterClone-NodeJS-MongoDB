@@ -37,6 +37,18 @@ const ProfileSchema=mongoose.Schema({
         type: String,
         required: false
     },
+	photo_url_cover:  {
+        type: String,
+        required: false
+    },
+	followers:	{
+		type: Array,
+		required: true,
+	},	
+	following:	{
+		type: Array,
+		required: true,
+	},
     token:  {
         type: String,
         required: false

@@ -151,13 +151,58 @@ router.post('/retweet', async (req, res)=> {
     }
 })
 
+router.get('/profile', async (req, res)=>  {
+    try {
+        const reqQuery=req.query
+		reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)
+        reqQuery.index=parseInt(reqQuery.index)
+
+        const foundTweets=await Tweet.aggregate([
+            {
+                $lookup:    {
+                    from: 'profiles',
+                    localField: 'profile_id',
+                    foreignField: '_id',
+                    as: 'profile'
+                },	
+            },
+            {
+                $project:   {
+                    text: 1,
+                    photo_url_tweet: 1,
+                    likes: 1,
+                    retweets: 1,
+                    created: 1,
+                    retweet_id: 1,   
+					profile: 1,
+					is_liked: {
+						$in: [reqQuery._id, "$liked_users"]
+					}	
+                }
+            },
+			{
+				$match:	{
+					username: req.username
+				}		
+			}	
+        ]).sort({ created: -1 }).skip(reqQuery.index).limit(15)
+
+
+        if(foundTweets)   {
+            return res.status(200).json({ message: 'Successfully fetched the profile\'s tweets', tweets: foundTweets })
+        }   else    {
+            return res.status(500).json({ message: 'Failed to fetch the profile\'s tweets', })
+        }
+    }   catch(err)  {
+        return res.status(500).json({ message: 'Failed to fetch the profile\'s tweets', error: err })
+    }
+})
 router.get('/', async (req, res)=>  {
     try {
         const reqQuery=req.query
         reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)
         reqQuery.index=parseInt(reqQuery.index)
 
-		console.log('~~ _id',reqQuery._id)
         const foundTweets=await Tweet.aggregate([
             {
                 $lookup:    {
@@ -193,6 +238,8 @@ router.get('/', async (req, res)=>  {
         return res.status(500).json({ message: 'Failed to fetch the tweets', error: err })
     }
 })
+
+
 
 router.post('/delete', async (req, res)=>{
     try {
