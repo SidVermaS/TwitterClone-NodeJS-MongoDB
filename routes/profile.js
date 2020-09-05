@@ -8,7 +8,7 @@ import Profile from '../models/Profile'
 router.get('/', async (req, res)=> {
     try {
         const reqQuery=req.query
-        reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)		
+        reqQuery._id=(reqQuery._id)		
 		
        // const foundProfile=await Profile.findOne({ username: reqParams.username }).select('_id name username bio loc joint photo_url_profile photo_url_cover')
        
@@ -28,6 +28,11 @@ router.get('/', async (req, res)=> {
 					}
 				}
 			},
+			{
+				$match:	{	
+					username: reqQuery.username
+				}
+			}
 		])
 	   
         if(foundProfile)  {
