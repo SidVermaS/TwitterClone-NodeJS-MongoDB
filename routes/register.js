@@ -18,6 +18,8 @@ router.post('/', async (req, res)=>{
             name: reqProfile.name,
             joint: Date.now(),
             photo_url_profile: null,
+			followers: [],
+			following: [],
         })
         if(await Profile.findOne({$or: [ {email: profile.email}, {username: profile.username} ]}).select('_id')) {
             return res.status(400).json({ message: 'Email/Username is already registered' })
