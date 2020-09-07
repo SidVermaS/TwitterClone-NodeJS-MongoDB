@@ -197,6 +197,44 @@ router.get('/profile', async (req, res)=>  {
         return res.status(500).json({ message: 'Failed to fetch the profile\'s tweets', error: err })
     }
 })
+router.patch('/favorite', async (req,res)=>	{
+	try	{
+		const reqBody=req.body
+		reqBody.tweet_id=mongoose.Types.ObjectId(reqBody.tweet_id)
+		reqBody.profile_id=mongoose.Types.ObjectId(reqBody.profile_id)
+		
+		let updatedTweet
+		
+		if(reqBody.is_liked)	{
+			updatedTweet=await Tweet.updateOne(
+				{ _id: reqBody.tweet_id },
+				{ 
+					$pull: {
+						liked_users: reqBody.profile_id	
+					}	
+				}
+			)
+		}	else	{
+			updatedTweet=await Tweet.updateOne(
+				{ _id: reqBody.tweet_id },
+				{
+					$addToSet:	{
+						favorites: reqBody.profile_id	
+					}	
+				}		
+			)
+		}	
+		updatedTweet=updatedTweet.toObject()
+		if(updatedTweet['n']>0)   {
+            return res.status(200).json({ message: `Successfully ${reqBody.is_liked?'':'un'}favorited`, tweet: updatedTweet })
+        }   else    {
+            return res.status(500).json({ message: `Failed to ${reqBody.is_liked?'':'un'}favorite`, })
+        }
+		
+	}   catch(err)  {
+        return res.status(500).json({ message: `Failed to ${reqBody.is_liked?'':'un'}favorite`, error: err })
+    }
+})	
 router.get('/', async (req, res)=>  {
     try {
         const reqQuery=req.query
