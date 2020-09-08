@@ -155,6 +155,7 @@ router.get('/profile', async (req, res)=>  {
     try {
         const reqQuery=req.query
 		reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)
+		reqQuery.current_user_id=mongoose.Types.ObjectId(reqQuery.current_user_id)
         reqQuery.index=parseInt(reqQuery.index)
 
         const foundTweets=await Tweet.aggregate([
