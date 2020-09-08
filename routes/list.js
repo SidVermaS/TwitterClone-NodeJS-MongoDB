@@ -33,7 +33,7 @@ router.post('/', async (req, res)=> {
         const savedList=await list.save()
        
         if(savedList)  {
-            return res.status(200).json({ message: 'Successfully created a new list', list: savedList })
+            return res.status(201).json({ message: 'Successfully created a new list', list: savedList })
         }   else    {
             return res.status(400).json({ message: 'Failed to create a new list' })
         }
