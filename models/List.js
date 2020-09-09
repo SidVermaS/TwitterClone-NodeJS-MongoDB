@@ -5,9 +5,9 @@ const ListSchema=mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
     },
-    title:   {
+    name:   {
         type: String,
-        required: false
+        required: true
     }, 
     description: {
         type: String,
@@ -15,7 +15,7 @@ const ListSchema=mongoose.Schema({
     },
     photo_url_list:   {
         type: String,
-        required: true,      
+        required: false,      
     },
     pinned:   {
         type: Boolean,

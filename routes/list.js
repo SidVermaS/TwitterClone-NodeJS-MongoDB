@@ -11,21 +11,23 @@ router.post('/', async (req, res)=> {
         reqBody.profile_id=new mongoose.Types.ObjectId(reqBody.profile_id)
         let list
 
-        if(reqBody.list_photo_url)  {
+        if(reqBody.photo_url_list)  {
             list=List({
                 _id: new mongoose.Types.ObjectId,
-                title: reqBody.title,
+                name: reqBody.name,
                 description: reqBody.description,
-                list_photo_url: reqBody.list_photo_url,
+                photo_url_list: reqBody.photo_url_list,
                 created: Date.now(),
+				pinned: false,
                 profile_id: reqBody.profile_id
             })
         }   else    {
             list=List({
                 _id: new mongoose.Types.ObjectId,
-                title: reqBody.title,
+                name: reqBody.name,
                 description: reqBody.description,
                 created: Date.now(),
+				pinned: false,
                 profile_id: reqBody.profile_id,
             })
         }
