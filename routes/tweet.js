@@ -30,7 +30,7 @@ router.post('/', async (req, res)=> {
                     _id: new mongoose.Types.ObjectId,
                     text: reqBody.text,
                     hashtags: hashtags,					
-					liked_users: [new mongoose.Types.ObjectId('5f4e8199fbaec92ff448aef1')],
+					liked_users: [],
                     likes: 0,
                     retweets: 0,
                     created: Date.now(),

@@ -62,8 +62,9 @@ router.get('/', async (req, res)=>  {
             {
                 $project:   {
                     _id: 1,
-                    title: 1,
+                    name: 1,
                     description: 1,
+					photo_url_list: 1,
                     profile:    {
                         _id: 1,
                         username: 1,
