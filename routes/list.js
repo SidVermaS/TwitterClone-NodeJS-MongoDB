@@ -65,6 +65,7 @@ router.get('/', async (req, res)=>  {
                     name: 1,
                     description: 1,
 					photo_url_list: 1,
+					pinned: 1,
                     profile:    {
                         _id: 1,
                         username: 1,
@@ -132,20 +133,6 @@ router.get('/pinned/:_id', async (req, res)=>  {
         return res.status(500).json({ message: 'Failed to fetch the pinned lists', error: err })
     }
 })
-router.get('/check', async (req, res)=>	{
-	try	{
-		const reqQuery=req.query
-			
-		reqQuery._id= mongoose.Types.ObjectId(reqQuery._id)
-		reqQuery.profile_id= mongoose.Types.ObjectId(reqQuery.profile_id)
-
-		const result=await List.findAll({profile_id: reqQuery.profile_id}).count()
-
-		return res.status(200).json({ message: 'Successfully check the pin', result: result })
-	}   catch(err)  {
-        return res.status(500).json({ message: 'Failed to check the pinned lists', error: err })
-    }
-})	
 
 router.patch('/', async (req, res)=> {
     try {
@@ -159,18 +146,20 @@ router.patch('/', async (req, res)=> {
 			pinnedListsCount=await List.find({ profile_id: reqBody.profile_id, pinned: true }).count()
 		}
 		
-		if(pinnedListsCount<6 || !reqBody.pinned)	{
+		if(pinnedListsCount<5 || !reqBody.pinned)	{
 			const result=await List.updateOne(
 				{ 
 					_id: reqBody._id 
 				},
-				$set: { 
-					pinned: reqBody.pinned 
-				}				
+				{
+					$set: { 
+						pinned: reqBody.pinned 
+					}	
+				}	
 			)
-			
+			console.log(' plc: ',result)
 			if(result['nModified']>0)  {
-				return res.status(200).json({ message: 'Successfully changed the pin', list: result })
+				return res.status(200).json({ message: 'Successfully changed the pin', result: result })
 			}   else    {
 				return res.status(400).json({ message: 'Failed to change the pin' })
 			}

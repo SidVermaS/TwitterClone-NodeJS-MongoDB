@@ -155,7 +155,7 @@ router.get('/profile', async (req, res)=>  {
     try {
         const reqQuery=req.query
 		reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)
-		reqQuery.current_user_id=mongoose.Types.ObjectId(reqQuery.current_user_id)
+		reqQuery.profile_id=mongoose.Types.ObjectId(reqQuery.profile_id)
         reqQuery.index=parseInt(reqQuery.index)
 
         const foundTweets=await Tweet.aggregate([
@@ -179,6 +179,7 @@ router.get('/profile', async (req, res)=>  {
 						_id: 1,
 						name: 1,
 						username: 1,
+						photo_url_profile: 1,
 					},
 					is_liked: {
 						$in: [reqQuery._id, "$liked_users"]
@@ -187,7 +188,7 @@ router.get('/profile', async (req, res)=>  {
             },
 			{
 				$match:	{
-					'profile.username': reqQuery.username
+					'profile._id': reqQuery.profile_id
 				}		
 			}	
         ]).sort({ created: -1 }).skip(reqQuery.index).limit(15)
