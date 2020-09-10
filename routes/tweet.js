@@ -175,7 +175,11 @@ router.get('/profile', async (req, res)=>  {
                     retweets: 1,
                     created: 1,
                     retweet_id: 1,   
-					profile: 1,
+					profile: {
+						_id: 1,
+						name: 1,
+						username: 1,
+					},
 					is_liked: {
 						$in: [reqQuery._id, "$liked_users"]
 					}	
@@ -183,7 +187,7 @@ router.get('/profile', async (req, res)=>  {
             },
 			{
 				$match:	{
-					username: req.username
+					'profile.username': reqQuery.username
 				}		
 			}	
         ]).sort({ created: -1 }).skip(reqQuery.index).limit(15)
