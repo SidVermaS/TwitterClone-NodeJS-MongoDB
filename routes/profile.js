@@ -8,7 +8,7 @@ import Profile from '../models/Profile'
 router.get('/', async (req, res)=> {
     try {
         const reqQuery=req.query
-        reqQuery._id=reqQuery._id		
+        reqQuery._id=mongoose.Types.ObjectId(reqQuery._id)	
 		
        // const foundProfile=await Profile.findOne({ username: reqParams.username }).select('_id name username bio loc joint photo_url_profile photo_url_cover')
        
@@ -85,24 +85,95 @@ router.get('/following', async (req, res)=> {
         return res.status(500).json({ message: 'Failed to fetch the following', error: err })
     }
 })
-router.patch('/', async (req, res)=>{
+router.patch('/friendship', async (req, res)=>{
 	const reqBody=req.body
-    try {
-        
-
-        const result=await List.deleteOne({ _id: reqBody._id })
+	reqBody._id=mongoose.Types.ObjectId(reqBody._id)
+	reqBody.current_profile_id=mongoose.Types.ObjectId(reqBody.current_profile_id)
+	
+    try {    
+        let result
 		
-        console.log('~~ del: ',result)
+		if(reqBody.action==='follow')	{
+			result=await Profile.updateOne({ 
+				_id: reqBody.current_profile_id,
+				followers: {
+					$nin: [reqBody._id]	
+				}	
+			},
+			{
+				$addToSet:	{
+					followers: reqBody._id
+				}
+			})			
+		
+			if(result['nModified'])  {
+				result=await Profile.updateOne({ 
+					_id:	reqBody._id,
+					following: {
+						$nin: [reqBody.current_profile_id]	
+					}	
+				},
+				{
+					$addToSet:	{
+						following: reqBody.current_profile_id
+					}
+				})
+					console.log('~~~ fp: ',result)
+				if(result['nModified'])  {
+					return res.status(200).json({ message: `Successfully ${reqBody.action}ed the profile`, result: result })
+				}   else    {
+					return res.status(400).json({ message: `Failed to ${reqBody.action} the profile` })
+				}	
+			}   else    {
+				return res.status(400).json({ message: `Failed to ${reqBody.action} the profile` })
+			}			
+		}	else if(reqBody.action==='unfollow')	{	
+			result=await Profile.updateOne({ 
+				_id:	reqBody.current_profile_id,
+				followers: {
+					$in: [reqBody._id]	
+				}	
+			},
+			{
+				$pull:	{
+					followers: reqBody._id
+				}
+			})			
+			console.log('~~~ fp: ',result)
+			if(result['nModified'])  {
+				result=await Profile.updateOne({ 
+					_id: reqBody._id,
+					following: {
+						$in: [reqBody.current_profile_id]	
+					}	
+				},
+				{
+					$pull:	{
+						following: reqBody.current_profile_id
+					}
+				})
+				console.log('~~~ 2 fp: ',result)
+				if(result['nModified'])  {
+					return res.status(200).json({ message: `Successfully ${reqBody.action}ed the profile`, result: result })
+				}   else    {
+					return res.status(400).json({ message: `Failed to ${reqBody.action} the profile` })
+				}
+			}   else    {
+				return res.status(400).json({ message: `Failed to ${reqBody.action} the profile` })
+			}
+	  
+	  
+		}
         if(result)  {
-            return res.status(200).json({ message: 'Successfully deleted the profile', })
+            return res.status(200).json({ message: `Successfully ${reqBody.action}ed the profile`, })
         }   else    {
-            return res.status(400).json({ message: 'Failed to delete the profile' })
+            return res.status(400).json({ message: `Failed to ${reqBody.action} the profile` })
         }
     }   catch(err)  {
-        return res.status(500).json({ message: `Failed to ${reqBody} the profile`, error: err })
+        return res.status(500).json({ message: `Failed to ${reqBody.action} the profile`, error: err })
     }
 })
-
+	
 router.post('/delete', async (req, res)=>{
     try {
         const reqBody=req.body
