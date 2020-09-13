@@ -52,7 +52,7 @@ function verifyToken(req, res, next)  {
     }
 }
 
-mongoose.connect('mongodb+srv://test:test@cluster0.2sl9y.mongodb.net/twitter_db?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }, ()=>  {
+mongoose.connect('mongodb+srv://', { useNewUrlParser: true, useUnifiedTopology: true }, ()=>  {
     console.log('connected to DB')
 })
 
